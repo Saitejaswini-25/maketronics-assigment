@@ -24,13 +24,8 @@ const App = () => {
   const [selectedTopic, setSelectedTopic] = useState("All Developer Tools");
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const { isDark, toggleTheme, setTheme } = useTheme(); // added setTheme if your context supports
+  const { isDark, toggleTheme } = useTheme();
   const [showTop, setShowTop] = useState(false);
-
-  // Default to Dark Theme on first load
-  useEffect(() => {
-    setTheme("dark");
-  }, [setTheme]);
 
   const refreshData = () => {
     const sourceData =
@@ -83,7 +78,7 @@ const App = () => {
                 </motion.span>
               ))}
             </div>
-            <p className="mt-2 text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-xl">
+            <p className="mt-2 text-sm sm:text-base text-gray-400 max-w-xl">
               Discover the best tools developers love — organized, searchable, and beautiful.
             </p>
           </div>
@@ -93,7 +88,9 @@ const App = () => {
             <select
               value={selectedTopic}
               onChange={(e) => setSelectedTopic(e.target.value)}
-              className="p-2 w-full sm:w-auto rounded-md border dark:bg-gray-800 dark:text-white"
+              className={`p-2 w-full sm:w-auto rounded-md border ${
+                isDark ? "bg-gray-800 text-white border-gray-700" : "bg-white text-black border-gray-300"
+              }`}
             >
               <option value="All Developer Tools">All Developer Tools</option>
               {Object.keys(topics).map((topic, idx) => (
@@ -108,12 +105,14 @@ const App = () => {
               placeholder="Search..."
               value={search}
               onChange={handleSearch}
-              className="p-2 w-full sm:w-auto rounded-md border dark:bg-gray-800 dark:text-white"
+              className={`p-2 w-full sm:w-auto rounded-md border ${
+                isDark ? "bg-gray-800 text-white border-gray-700" : "bg-white text-black border-gray-300"
+              }`}
             />
 
             <div className="flex gap-2">
               <button
-                onClick={() => refreshData()}
+                onClick={refreshData}
                 className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
               >
                 Refresh
