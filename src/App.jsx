@@ -13,7 +13,6 @@ const generateHybridDescription = (original, title) => {
     `${title} is designed to help you build, test, and ship faster. With powerful customization options, it adapts to your tech stack and team needs.`,
     `${title} offers a modern solution to everyday developer challenges. Whether you're working solo or in a team, it makes tasks smoother and faster.`,
   ];
-
   const useOriginal = Math.random() < 0.4;
   return useOriginal ? original : templates[Math.floor(Math.random() * templates.length)];
 };
@@ -25,11 +24,17 @@ const App = () => {
   const [selectedTopic, setSelectedTopic] = useState("All Developer Tools");
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme, setTheme } = useTheme(); // added setTheme if your context supports
   const [showTop, setShowTop] = useState(false);
 
+  // Default to Dark Theme on first load
+  useEffect(() => {
+    setTheme("dark");
+  }, [setTheme]);
+
   const refreshData = () => {
-    const sourceData = selectedTopic === "All Developer Tools" ? allToolsBase : topics[selectedTopic];
+    const sourceData =
+      selectedTopic === "All Developer Tools" ? allToolsBase : topics[selectedTopic];
     const randomized = sourceData.map((item) => ({
       ...item,
       description: generateHybridDescription(item.description, item.title),
@@ -58,7 +63,7 @@ const App = () => {
   return (
     <div
       className={`min-h-screen px-4 sm:px-6 py-10 transition-colors duration-500 ${
-        isDark ? "bg-gray-900" : "bg-gray-100"
+        isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
       }`}
     >
       <div className="max-w-7xl mx-auto">
@@ -108,7 +113,7 @@ const App = () => {
 
             <div className="flex gap-2">
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => refreshData()}
                 className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
               >
                 Refresh
